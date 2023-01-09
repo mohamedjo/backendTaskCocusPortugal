@@ -61,7 +61,7 @@
 #       You can find Gradle at https://github.com/gradle/gradle/.
 #
 ##############################################################################
-chmod +x gradlew
+git update-index --chmod=+x gradlew
 
 
 # Attempt to set APP_HOME
