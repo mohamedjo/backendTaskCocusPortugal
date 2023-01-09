@@ -1,13 +1,16 @@
 package com.cocus.backendTask.client.vo;
 
+import com.cocus.backendTask.model.GithubRepo;
 import com.cocus.backendTask.model.response.RepoResponse;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class GitHubServiceGetAllRepoVO {
-    List<RepoResponse>repoResponseList;
+    private List<GithubRepo> githubRepoList;
 
-    public GitHubServiceGetAllRepoVO(List<RepoResponse> repoResponseList) {
-        this.repoResponseList = repoResponseList;
+    public GitHubServiceGetAllRepoVO(List<GithubRepo> githubRepoList) {
+        this.githubRepoList = githubRepoList;
     }
 }

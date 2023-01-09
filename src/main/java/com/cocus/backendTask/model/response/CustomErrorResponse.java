@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class BranchResponse {
+@NoArgsConstructor
+@Setter
+@Getter
+public class CustomErrorResponse {
 
-    private String name;
-    private String LastCommitSHA;
+    private long status;
+    private String message;
+
 
 }

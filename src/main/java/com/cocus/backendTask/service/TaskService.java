@@ -1,12 +1,13 @@
 package com.cocus.backendTask.service;
 
-import com.cocus.backendTask.model.GithubRepo;
+import com.cocus.backendTask.model.response.RepoResponse;
 
 import java.util.List;
 
 public interface TaskService {
 
-    List<GithubRepo> GetAllGitHubReposByUserName(String userName);
+    List<RepoResponse> getAllGitHubReposByUserName(String userName);
+
 
 
 }

@@ -1,20 +1,22 @@
 package com.cocus.backendTask.client;
 
 import com.cocus.backendTask.client.vo.GitHubServiceGetAllRepoVO;
-import com.cocus.backendTask.model.Branch;
+import com.cocus.backendTask.exception.custom.APIRateLimitExceededException;
+import com.cocus.backendTask.exception.custom.UserNotFoundException;
+import com.cocus.backendTask.model.GithubBranch;
 import com.cocus.backendTask.model.GithubRepo;
-import com.cocus.backendTask.model.response.BranchResponse;
-import com.cocus.backendTask.model.response.RepoResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.cocus.backendTask.client.constant.GithubConstant.*;
+import static com.cocus.backendTask.client.constant.GithubConstants.*;
 
 
 @Slf4j
@@ -26,37 +28,29 @@ public class GitHubServiceClientImpl implements GitHubServiceClient {
 
     @Override
     public GitHubServiceGetAllRepoVO getAllRepos(String userName) {
+        GithubRepo[] githubRepos = null;
+        try {
+            githubRepos = restTemplate.getForObject(GITHUB_API_BASE_URL + USER_REPOS_GET_PATH.replace(USER_CONSTANT, userName)
+                    , GithubRepo[].class);
 
-        GithubRepo[] githubRepos = restTemplate.getForObject(GITHUB_API_BASE_URL + USER_REPOS_GET_PATH.replace(USER_CONSTANT, userName)
-                , GithubRepo[].class);
-
-        List<RepoResponse> repoResponseList = new ArrayList<>();
-        for (GithubRepo githubRepo : githubRepos) {
-
-            if (!githubRepo.isFork()) {
-                RepoResponse repoResponse = new RepoResponse();
-                repoResponse.setRepositoryName(githubRepo.getRepositoryName());
-                repoResponse.setOwner(githubRepo.getOwner());
-                List<Branch> branchList = getAllBranches(userName, githubRepo.getRepositoryName());
-                List<BranchResponse> branchResponseList= new ArrayList<>();
-                for (Branch branch : branchList) {
-
-                    BranchResponse branchResponse=new BranchResponse()
-                }
-
+        } catch (HttpClientErrorException | HttpServerErrorException httpClientOrServerExc) {
+            if (HttpStatus.NOT_FOUND.equals(httpClientOrServerExc.getStatusCode())) {
+                throw new UserNotFoundException(" user: " + userName + " Not Exist");
 
             }
-
+            if (HttpStatus.FORBIDDEN.equals(httpClientOrServerExc.getStatusCode())) {
+                throw new APIRateLimitExceededException("API rate limit exceeded");
+            }
         }
 
-        return null;
+        return new GitHubServiceGetAllRepoVO(Arrays.stream(githubRepos).toList());
     }
 
-    public List<Branch> getAllBranches(String userName, String repoName) {
+    @Override
+    public List<GithubBranch> getAllBranches(String userName, String repoName) {
 
-        Branch[] objects = restTemplate.getForObject(GITHUB_API_BASE_URL + REPO_BRANCHES_GET_PATH.replace(USER_CONSTANT, userName).replace(REPO_CONSTANT, repoName)
-                , Branch[].class);
-
+        GithubBranch[] objects = restTemplate.getForObject(GITHUB_API_BASE_URL + REPO_BRANCHES_GET_PATH.replace(USER_CONSTANT, userName).replace(REPO_CONSTANT, repoName)
+                , GithubBranch[].class);
 
         return Arrays.stream(objects).toList();
     }
