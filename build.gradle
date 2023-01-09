@@ -2,6 +2,9 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.4.0'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'com.palantir.docker' version '0.25.0'
+	id 'com.palantir.docker-run' version '0.25.0'
+
 }
 
 group = 'com.cocus'
@@ -28,4 +31,20 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'mojo97'
+String imageName = "${dockerHubUsernameProperty}/backend-task-cocus-portugal:$version"
+
+docker {
+	name imageName
+	files "build/libs/${bootJar.archiveFileName.get()}"
+	buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
+}
+
+dockerRun {
+	name project.name
+	image imageName
+	ports '8080:8080'
+	clean true
 }

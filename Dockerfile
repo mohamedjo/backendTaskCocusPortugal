@@ -1,4 +1,4 @@
-FROM openjdk:19
-EXPOSE 8080
-ADD target/backend-task-youssef-docker.jar backend-task-youssef-docker.jar
-ENTRYPOINT ["java","-jar","/backend-task-youssef-docker.jar"]
+FROM openjdk:17
+ARG JAR_FILE
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
