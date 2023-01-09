@@ -40,7 +40,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @Override
     @Nullable
-    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
+            HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         CustomErrorResponse customErrorResponse = new CustomErrorResponse(NOT_ACCEPTABLE_STATUS_CODE, ex.getMessage());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(customErrorResponse, headers, HttpStatus.NOT_ACCEPTABLE);

@@ -43,7 +43,7 @@ public class GitHubServiceClientImpl implements GitHubServiceClient {
             }
         }
 
-        return new GitHubServiceGetAllRepoVO(Arrays.stream(githubRepos).toList());
+        return new GitHubServiceGetAllRepoVO(Arrays.asList(githubRepos));
     }
 
     @Override
@@ -52,6 +52,6 @@ public class GitHubServiceClientImpl implements GitHubServiceClient {
         GithubBranch[] objects = restTemplate.getForObject(GITHUB_API_BASE_URL + REPO_BRANCHES_GET_PATH.replace(USER_CONSTANT, userName).replace(REPO_CONSTANT, repoName)
                 , GithubBranch[].class);
 
-        return Arrays.stream(objects).toList();
+        return Arrays.asList(objects);
     }
 }
