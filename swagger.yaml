@@ -1,0 +1,80 @@
+
+# Backend Task OpenAPI
+
+openapi: 3.0.0
+
+info:
+  title: OpenAPI Spsefications for BackendTask
+  version: 0.0.1
+  
+  
+servers: 
+ - url: localhost:8080/api/
+ 
+tags:
+ - name: repository
+   description: operations about repositories
+   
+paths: 
+ /repositories/{userName}: 
+   summary: operations about repository
+   get: 
+    tags:
+      - repository
+    parameters:
+      - name: userName
+        in: path
+        description: An unique identifier that uniquely identifies a User Name in github
+        required: true
+        explode: false
+        schema:
+          type: string
+        example: 'mohamedjo'
+    summary: get all the repositories that Not Forked
+    responses: 
+     200: 
+      description: success
+      content:
+        application/json:
+           schema:      # Request body contents
+               type: array
+               items:
+                type: object
+                properties:
+                 ownerName:
+                  type: string
+                 repositoryName:
+                  type: string
+                 branches:
+                  type: object
+                  properties:
+                   name:
+                    type: string
+                   lastCommitSHA:
+                    type: string
+
+     404: 
+      description: Not existing github user
+      content:
+        application/json:
+           schema:      
+                  type: object
+                  properties:
+                   status:
+                    type: string
+                   message:
+                    type: string    
+                    
+     406: 
+      description: header  application/xml not Acceptable
+      content:
+        application/json:
+           schema:      
+                  type: object
+                  properties:
+                   status:
+                    type: string
+                   message:
+                    type: string   
+   
+ 
