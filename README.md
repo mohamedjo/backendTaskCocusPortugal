@@ -5,9 +5,11 @@ REST API For interacting with the GitHub REST API
 
 ## Features
 
-given username and header “Accept: application/json”, 
-list of all of his github repositories, which are not forks will returned
+Given the username and header "Accept: application/json", a list of all the GitHub repositories that are not forks will be returned
 
+## Docker Repo
+
+mojo97/backend-task-cocus-portugal
 
 
 
@@ -108,19 +110,20 @@ list of all of his github repositories, which are not forks will returned
 
 - Springboot
 - Junit, Mockito,  Mock MVC 
+- docker
+- AWS Fargate, CloudeFormation
+- Jenkins
 - https://developer.github.com/v3 as a backing API
 ## Requirements
 
-- JDK 1.8
-- Maven 3
+- JDK 11
+- gradle
 ## Run Locally
 
 
 There are several ways to run a Spring Boot application on your local machine. One way is to execute the main method in the om.cocus.backendTask.BackendTaskApplication class from your IDE.
 
-Alternatively you can use the Spring Boot Maven plugin like so:
+Alternatively you can use the Spring Boot gradle plugin
 
 
-```bash
-mvn spring-boot:run
-```
+
