@@ -1,9 +1,10 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.4.0'
-	id 'io.spring.dependency-management' version '1.1.0'
-	id 'com.palantir.docker' version '0.25.0'
-	id 'com.palantir.docker-run' version '0.25.0'
+    id 'java'
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.palantir.docker' version '0.34.0'
+    id 'com.palantir.docker-run' version '0.34.0'
+    id 'jp.classmethod.aws.reboot.cloudformation' version '0.45'
 
 }
 
@@ -12,39 +13,53 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '8'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'mojo97'
 String imageName = "${dockerHubUsernameProperty}/backend-task-cocus-portugal:$version"
 
 docker {
-	name imageName
-	files "build/libs/${bootJar.archiveFileName.get()}"
-	buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
+    name imageName
+    files "build/libs/${bootJar.archiveFileName.get()}"
+    buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
 }
 
 dockerRun {
-	name project.name
-	image imageName
-	ports '8080:8080'
-	clean true
+    name project.name
+    image imageName
+    ports '8080:8080'
+    clean true
+}
+aws {
+    region = findProperty('region') ?: 'us-east-1'
+}
+
+cloudFormation {
+    stackName "$project.name-stack"
+    stackParams([
+            SubnetID         : findProperty('subnetId') ?: '',
+            ServiceName      : project.name,
+            ServiceVersion   : project.version,
+            DockerHubUsername: dockerHubUsernameProperty
+    ])
+    templateFile project.file("ecs.yml")
 }

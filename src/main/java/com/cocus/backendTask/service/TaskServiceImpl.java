@@ -1,6 +1,7 @@
 package com.cocus.backendTask.service;
 
 import com.cocus.backendTask.client.GitHubServiceClient;
+import com.cocus.backendTask.client.vo.GitHubServiceGetAllBranchesVO;
 import com.cocus.backendTask.helper.TaskServiceHelper;
 import com.cocus.backendTask.model.GithubBranch;
 import com.cocus.backendTask.model.GithubRepo;
@@ -38,7 +39,9 @@ public class TaskServiceImpl implements TaskService {
 
             if (!githubRepo.isFork()) {
                 RepoResponse repoResponse = taskServiceHelper.gitHupRepoToRepoResponse(githubRepo);
-                List<GithubBranch> githubBranchList = gitHubServiceClient.getAllBranches(githubRepo.getOwner().getLoginName(), githubRepo.getRepositoryName());
+
+                GitHubServiceGetAllBranchesVO gitHubServiceGetAllBranchesVO= gitHubServiceClient.getAllBranches(githubRepo.getOwner().getLoginName(), githubRepo.getRepositoryName());
+                List<GithubBranch> githubBranchList =gitHubServiceGetAllBranchesVO.getGithubBranches();
                 List<BranchResponse> branchResponseList = taskServiceHelper.getBranchResponseList(githubBranchList);
                 repoResponse.setBranches(branchResponseList);
                 repoResponseList.add(repoResponse);

@@ -1,6 +1,8 @@
 package com.cocus.backendTask.fixture;
 
 import com.cocus.backendTask.TestUtils;
+import com.cocus.backendTask.model.Commit;
+import com.cocus.backendTask.model.GithubBranch;
 import com.cocus.backendTask.model.GithubRepo;
 import com.cocus.backendTask.model.Owner;
 import com.cocus.backendTask.model.response.RepoResponse;
@@ -71,7 +73,7 @@ public class TaskFixture {
         return githubRepoList;
 
     }
-    public static GithubRepo[] getGithubReposResponeArray() {
+    public static GithubRepo[] getGithubReposResponseArray() {
         GithubRepo[] githubRepos = new GithubRepo[2];
 
         GithubRepo githubRepo = new GithubRepo();
@@ -83,8 +85,30 @@ public class TaskFixture {
         githubRepo2.setRepositoryName("Jax");
         githubRepo2.setOwner(new Owner("mohamedjo"));
         githubRepos[0] = githubRepo;
-        githubRepos[1]= githubRepo;
+        githubRepos[1]= githubRepo2;
         return githubRepos;
     }
+    public static GithubBranch[] getGithubBranchesResponseArray() {
+        GithubBranch[] githubBranches = new GithubBranch[2];
 
-}
+
+        GithubBranch branch=new GithubBranch();
+        branch.setName("Master");
+        Commit commit=new Commit();
+        commit.setLastCommitSHA("fcfencefjkcnejfkcnewjc");
+        branch.setCommit(commit);
+        GithubBranch branch2=new GithubBranch();
+        branch2.setName("Master");
+        Commit commit2=new Commit();
+        commit2.setLastCommitSHA("fcfencefjkcnejfkcnewjc");
+        branch2.setCommit(commit2);
+
+        githubBranches[0] = branch;
+        githubBranches[1]= branch2;
+
+        return  githubBranches;
+
+    }
+
+
+    }

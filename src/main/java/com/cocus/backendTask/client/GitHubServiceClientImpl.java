@@ -1,5 +1,6 @@
 package com.cocus.backendTask.client;
 
+import com.cocus.backendTask.client.vo.GitHubServiceGetAllBranchesVO;
 import com.cocus.backendTask.client.vo.GitHubServiceGetAllRepoVO;
 import com.cocus.backendTask.exception.custom.APIRateLimitExceededException;
 import com.cocus.backendTask.exception.custom.UserNotFoundException;
@@ -47,11 +48,11 @@ public class GitHubServiceClientImpl implements GitHubServiceClient {
     }
 
     @Override
-    public List<GithubBranch> getAllBranches(String userName, String repoName) {
+    public GitHubServiceGetAllBranchesVO getAllBranches(String userName, String repoName) {
 
         GithubBranch[] objects = restTemplate.getForObject(GITHUB_API_BASE_URL + REPO_BRANCHES_GET_PATH.replace(USER_CONSTANT, userName).replace(REPO_CONSTANT, repoName)
                 , GithubBranch[].class);
 
-        return Arrays.asList(objects);
+        return new GitHubServiceGetAllBranchesVO((Arrays.asList(objects)));
     }
 }
